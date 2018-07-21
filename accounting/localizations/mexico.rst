@@ -66,10 +66,11 @@ integrate with the normal invoicing flow in Odoo.
 -------------------------------------------
 
 First, make sure that your company is configured with the correct data.
-Go in :menuselection:`Settings --> Users --> Companies`
-and enter a valid address and VAT for
-your company. Don’t forget to define a mexican fiscal position on your
-company’s contact.
+Go in :menuselection:`Settings --> Set up your company information
+ --> Set Up` and enter a valid address and VAT for your company. 
+
+You need to enter to Contacts and look for your company. Then define a 
+Mexican fiscal position on your company’s contact form and its sub-tab Accounting.
 
 .. tip::
    If you want use the Mexican localization on test mode, you can put any known
@@ -135,7 +136,9 @@ the first 3 numbers in the name) for example for the test one you should set
    :align: center
 
 All products must have for CFDI 3.3 the "SAT code" and the field "Reference"
-properly set, you can export them and re import them to do it faster.
+properly set, you can export them and re import them to do it faster. If the SAT 
+codes are not set up, PAC cannot sign the invoice and signing attempt will result to 
+an error 36.
 
 .. image:: media/mexico15.png
    :align: center
@@ -152,9 +155,14 @@ and then enter your PAC username and PAC password.
    Remember you must sign up in the refereed PAC before hand, that process
    can be done with the PAC itself on this case we will have two
    (2) availables `Finkok`_ and `Solución Factible`_.
+   
+   You must process your **Private Key (.CSD)**, **Certificate (.cer)** 
+   and **Password** of the company in whose name the invoices will be submitted.
 
-   You must process your **Private Key (CSD)** with the SAT institution before
-   follow this steps, if you do not have such information please try all the
+   It is highly recommended to test the private key, Certificate and Password 
+   combination. Typically PACs will be happy to help with this.
+
+   If you do not have such information please try all the
    "Steps for Test" and come back to this process when you finish the process
    proposed for the SAT in order to set this information for your production
    environment with real transactions.
@@ -234,7 +242,8 @@ If the invoice is not paid.
 .. image:: media/mexico29.png
    :align: center
 
-- Check the "Allow cancelling entries" field
+- Check the "Allow cancelling entries" field. Note that you need to have Developer
+  mode enabled to see this field.
 
 .. image:: media/mexico29.png
    :align: center
@@ -256,6 +265,12 @@ If the invoice is not paid.
 - You must unlink all related payment done to an invoice on odoo before
   cancel such document, this payments must be cancelled to following the same
   approach but setting the "Allow Cancel Entries" in the payment itself.
+- With some PACs it is not possible to cancel an invoice before two hours have 
+  passed. Odoo will inform the user about that.
+- Certain book keeping regulations require the unit of measure to be specified
+  following SAT rules (for example "piezas" has a SAT code H87). To enable
+  that in Odoo, you need to install Purchase module and then enable Units of 
+  Measure management from Settings.
 
 Payments (Just available for CFDI 3.3)
 --------------------------------------
@@ -268,7 +283,11 @@ process in Odoo, this considerations to understand the behavior are important.
    for "Cash payment".
 2. To test a regular signed payment just create an invoice for the day before
    today and then pay it today.
-3. You must print the payment in order to retrieve the PDF properly.
+3. You must print the payment in order to retrieve the PDF properly. Note 
+   that printing the invoice generates only PDF file, not XML file. For 
+   Mexican 
+   Alternatively you can send it by e-mail. That triggers generating PDF
+   file and CDFI 3.3 compliant XML file.
 4. Regarding the "Payments in Advance" you must create a proper invoice with
    the payment in advance itself as a product line setting the proper SAT code
    following the procedure on the official documentation `given by the SAT`_
